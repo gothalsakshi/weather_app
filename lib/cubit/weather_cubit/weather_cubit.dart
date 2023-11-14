@@ -5,11 +5,20 @@ part 'weather_state.dart';
 
 class WeatherCubit extends Cubit<WeatherState> {
   WeatherCubit() : super(WeatherInitial());
-
-  Future<void> callWeatherApi()async{
+  final TextEditingController cityName = TextEditingController();
+  Future<void> callWeatherApi(String city)async{
     WeatherService weatherService = WeatherService();
-    emit(WeatherLoadingState());
-    await weatherService.getLatLonData('Goa');
-    emit(WeatherSuccessState());
+    if(city.isNotEmpty){
+      emit(WeatherLoadingState());
+      await weatherService.getLatLonData(city);
+      cityName.clear();
+      emit(WeatherSuccessState());
+    }else{
+      emit(WeatherErrorState(error: 'Something went wrong'));
+    }
+  }
+
+  void resetState(){
+    emit(WeatherInitial());
   }
 }

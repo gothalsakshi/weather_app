@@ -7,10 +7,9 @@ class DataViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Colors.amberAccent,
-      body: Column(
-        children: [
-
-      ]),
+      body: Center(
+        child: CircleAvatar(radius: 40,backgroundColor: Colors.deepPurpleAccent),
+      ),
     );
   }
 }
