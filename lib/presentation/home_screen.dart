@@ -9,8 +9,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final weatherService = WeatherService();
-    
+    //final weatherService = WeatherService();    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple.shade100,
@@ -27,7 +26,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             BlocBuilder<WeatherCubit,WeatherState>(
               builder: (context, state) {
-              if (state is WeatherErrorState){
+              if (state is WeatherErrorState  || state is WeatherSuccessState){
                 return IconButton(onPressed: (){
               context.read<WeatherCubit>().resetState();
             }, icon: const Icon(Icons.refresh_outlined,size: 30,));
@@ -61,22 +60,19 @@ class HomeScreen extends StatelessWidget {
                 // bloc: WeatherCubit(),
                 builder: (ctx, state) {
                   if (state is WeatherLoadingState) {
-                    return const CircularProgressIndicator();
-                  } else if (state is WeatherSuccessState) {
-                    return const Text('');
-                  } else if(state is WeatherErrorState){
+                    return const Center(child: CircularProgressIndicator());
+                  }  else if(state is WeatherErrorState){
                     return Center(child: Text(state.error));
                   }else {
                     return InkWell(
                       onTap: () async {
-                        // if(context.read<WeatherCubit>().cityName.text.isNotEmpty){
-                          await context.read<WeatherCubit>().callWeatherApi(context.read<WeatherCubit>().cityName.text);
-                          // if (!context.mounted) return;
-                          // Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const DataViewScreen()));
-                        // }else{
-                          // debugPrint('clicked button');
-                        // }
-                        // 
+                        if(context.read<WeatherCubit>().cityName.text.isNotEmpty){
+                          await context.read<WeatherCubit>().callWeatherApi();
+                          if (!context.mounted) return;
+                          Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const DataViewScreen()));
+                        }else{
+                          debugPrint('clicked button');
+                        }
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width,

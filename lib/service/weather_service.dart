@@ -33,9 +33,9 @@ class WeatherService{
           final modelData = LatLonModel.fromJson(decodeData);
           LatLonModel latLonModel = modelData;
           debugPrint('checking the model data--->${modelData.toString()}');
-          await getWeatherData(latLonModel);
+          // await getWeatherData(latLonModel);
           debugPrint('here is response-->${uri.toString()}');
-          return decodeData;
+          return latLonModel;
         }
       }
       catch(e){
@@ -45,14 +45,14 @@ class WeatherService{
   }
 
 
-  Future<dynamic> getWeatherData(LatLonModel latLonModel)async{
+  Future<dynamic> getWeatherData(double lat,double lon)async{
     final Uri uri = Uri(
       host: kApiHost,
       scheme: 'https',
       path: '/data/2.5/weather',
       queryParameters: {
-        'lat': "${latLonModel.lat}",
-        'lon': "${latLonModel.lon}",
+        'lat': '$lat',
+        'lon': '$lon',
         'limit': kLimit,
         'appid' : appId
       });
@@ -62,8 +62,10 @@ class WeatherService{
       final http.Response response = await http.Client().get(uri);
       final decodeData = jsonDecode(response.body);
       final modelData = WeatherData.fromJson(decodeData);
+      // final newModelData = NewWeatherDataModel.fromJson(decodeData);
       WeatherData weatherData = modelData;
-      debugPrint('----------${weatherData.weather![0].icon}');
+      // NewWeatherDataModel newWeatherDataModel = newModelData;
+      debugPrint('----------${weatherData.toString()}');
       return weatherData;
     } catch (e) {
       return e.toString();
